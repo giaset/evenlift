@@ -26,12 +26,25 @@
     <div class="container">
 
       <form class="form-signin" role="form">
-        <h2 class="form-signin-heading">Add a set</h2>
+        <h2 class="form-signin-heading">Add to current workout</h2>
         <input type="email" class="form-control" placeholder="Exercise" required autofocus>
         <input type="number" min="1" class="form-control" placeholder="Reps" required>
         <input type="number" min="1" class="form-control" placeholder="Weight" required>
-        <button class="btn btn-lg btn-success btn-block" type="submit">Add</button>
+        <button class="btn btn-lg btn-success btn-block" type="submit">Add set</button>
+        <h4 class="form-signin-heading">or</h4>
+        <button class="btn btn-lg btn-danger btn-block">End workout</button>
       </form>
+      <script>
+        var myDataRef = new Firebase('https://radiant-fire-6739.firebaseio.com/');
+        $('#messageInput').keypress(function (e) {
+          if (e.keyCode == 13) {
+            var name = $('#nameInput').val();
+            var text = $('#messageInput').val();
+            myDataRef.push({name: name, text: text});
+            $('#messageInput').val('');
+          }
+        });
+      </script>
 
     </div> <!-- /container -->
 
