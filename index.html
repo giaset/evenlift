@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>EvenLift - Login</title>
+    <title>EvenLift</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
-    <!-- Custom styles for login screen -->
+    <!-- Custom styles -->
     <link href="css/index.css" rel="stylesheet">
 
     <!-- Install Firebase & Simple Login -->
@@ -26,13 +26,25 @@
   <body>
     <div class="container">
 
-      <div class="form-signin">
+      <div class="form-signin" id="login">
         <h2 class="form-signin-heading">Log in to start your workout</h2>
         <h5 class="form-signin-subheading">Not a member yet? <a href="register.html">Register here</a></h5>
         <input type="email" id="email" class="form-control" placeholder="Email address" required autofocus>
         <input type="password" id="password" class="form-control" placeholder="Password" required>
         <button class="btn btn-lg btn-primary btn-block" onclick="attemptLogin()">Log in</button>
-      </div>
+      </div> <!-- /login -->
+
+      <div class="form-signin" id="add">
+        <h2 class="form-signin-heading">Add completed set to current workout</h2>
+        <input type="text" class="form-control" placeholder="Exercise" required autofocus>
+        <input type="number" min="1" class="form-control" placeholder="Reps" required>
+        <input type="number" min="1" class="form-control" placeholder="Weight (in kg, leave blank for bw)">
+        <input type="number" class="form-control" placeholder="Rest after (in sec, optional)">
+        <input type="text" class="form-control" placeholder="Notes (optional)">
+        <button class="btn btn-lg btn-success btn-block" >Add set</button>
+        <h4 class="form-signin-heading">- or -</h4>
+        <button class="btn btn-lg btn-danger btn-block">End workout</button>
+      </div> <!-- /add -->
 
     </div> <!-- /container -->
 
@@ -56,7 +68,7 @@
         auth.logout();
 
         function startWorkout(user) {
-          window.location.href = "add.html";
+          // do shit here
         }
 
         function attemptLogin() {
@@ -70,6 +82,8 @@
             attemptLogin();
           }
         });
+
+        //fb.push({exercise: exercise, time: time, reps: reps, weight: weight, rest: rest});
       </script>
   </body>
 </html>

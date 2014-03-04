@@ -26,6 +26,13 @@ body {
 .form-signin .form-control:focus {
   z-index: 2;
 }
+.form-signin input {
+  margin-bottom: 10px;
+}
+.form-signin h4 {
+  margin-top: 5px;
+  text-align: center;
+}
 .form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
