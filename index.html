@@ -43,7 +43,7 @@
         <input type="text" class="form-control" placeholder="Notes (optional)">
         <button class="btn btn-lg btn-success btn-block" >Add set</button>
         <h4 class="form-signin-heading">- or -</h4>
-        <button class="btn btn-lg btn-danger btn-block">End workout</button>
+        <button class="btn btn-lg btn-danger btn-block" onclick="endWorkout()">End workout</button>
       </div> <!-- /add -->
 
     </div> <!-- /container -->
@@ -62,13 +62,23 @@
           } else if (user) {
             // user logged in
             startWorkout(user);
+          } else {
+            // user is logged out
+            showLogin();
           }
         });
         // Logout the user whenever we get to this page
         auth.logout();
 
         function startWorkout(user) {
-          // do shit here
+          $('#login').hide();
+          $('#add').show();
+        }
+
+        function showLogin() {
+          $('#password').val('');
+          $('#login').show();
+          $('#add').hide();
         }
 
         function attemptLogin() {
@@ -82,6 +92,10 @@
             attemptLogin();
           }
         });
+
+        function endWorkout() {
+          auth.logout();
+        }
 
         //fb.push({exercise: exercise, time: time, reps: reps, weight: weight, rest: rest});
       </script>
