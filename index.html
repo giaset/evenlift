@@ -26,19 +26,27 @@
   <body>
     <div class="container">
 
-      <form class="form-signin" role="form">
+      <div class="form-signin">
         <h2 class="form-signin-heading">Log in to start your workout</h2>
         <h5 class="form-signin-subheading">Not a member yet? <a href="register.html">Register here</a></h5>
         <input type="email" id="email" class="form-control" placeholder="Email address" required autofocus>
         <input type="password" id="password" class="form-control" placeholder="Password" required>
         <button class="btn btn-lg btn-primary btn-block" onclick="attemptLogin()">Log in</button>
-      </form>
-      <script>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
         var fb = new Firebase('https://evenlift.firebaseio.com/');
         var auth = new FirebaseSimpleLogin(fb, function(error, user) {
           if (error) {
             // an error occurred while attempting login
             alert(error);
+            $('#password').val('');
           } else if (user) {
             // user logged in
             startWorkout(user);
@@ -56,13 +64,12 @@
           var password = $('#password').val();
           auth.login('password', { email: email, password: password });
         };
+
+        $('#password').keypress(function (e) {
+          if (e.keyCode == 13) {
+            attemptLogin();
+          }
+        });
       </script>
-
-    </div> <!-- /container -->
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   </body>
 </html>
