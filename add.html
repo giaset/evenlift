@@ -25,28 +25,17 @@
   <body>
     <div class="container">
 
-      <form class="form-signin" role="form">
+      <div class="form-signin">
         <h2 class="form-signin-heading">Add completed set to current workout</h2>
         <input type="email" class="form-control" placeholder="Exercise" required autofocus>
         <input type="number" min="1" class="form-control" placeholder="Reps" required>
         <input type="number" min="1" class="form-control" placeholder="Weight (in kg, leave blank for bw)">
         <input type="number" class="form-control" placeholder="Rest after (in sec, optional)">
         <input type="text" class="form-control" placeholder="Notes (optional)">
-        <button class="btn btn-lg btn-success btn-block" type="submit">Add set</button>
+        <button class="btn btn-lg btn-success btn-block" >Add set</button>
         <h4 class="form-signin-heading">- or -</h4>
         <button class="btn btn-lg btn-danger btn-block">End workout</button>
-      </form>
-      <script>
-        var fb = new Firebase('https://evenlift.firebaseio.com/');
-        $('#messageInput').keypress(function (e) {
-          if (e.keyCode == 13) {
-            var name = $('#nameInput').val();
-            var text = $('#messageInput').val();
-            fb.push({exercise: exercise, time: time, reps: reps, weight: weight, rest: rest});
-            $('#messageInput').val('');
-          }
-        });
-      </script>
+      </div>
 
     </div> <!-- /container -->
 
@@ -54,5 +43,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+        var fb = new Firebase('https://evenlift.firebaseio.com/');
+        //fb.push({exercise: exercise, time: time, reps: reps, weight: weight, rest: rest});
+    </script>
   </body>
 </html>
