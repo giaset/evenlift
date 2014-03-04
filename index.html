@@ -26,6 +26,8 @@
   <body>
     <div class="container">
 
+      <div id="spinner"></div>
+
       <div class="form-signin" id="login">
         <h2 class="form-signin-heading">Log in to start your workout</h2>
         <h5 class="form-signin-subheading">Not a member yet? <a href="register.html">Register here</a></h5>
@@ -55,33 +57,38 @@
     <script>
         var fb = new Firebase('https://evenlift.firebaseio.com/');
         var auth = new FirebaseSimpleLogin(fb, function(error, user) {
-          if (error) {
-            // an error occurred while attempting login
-            alert(error);
-            $('#password').val('');
-          } else if (user) {
+          if (user) {
             // user logged in
             startWorkout(user);
           } else {
             // user is logged out
             showLogin();
+            if (error) {
+              // an error occurred while attempting login
+              alert(error);
+            }
           }
         });
+
         // Logout the user whenever we get to this page
         auth.logout();
 
         function startWorkout(user) {
+          $('#spinner').hide();
           $('#login').hide();
           $('#add').show();
         }
 
         function showLogin() {
+          $('#spinner').hide();
           $('#password').val('');
           $('#login').show();
           $('#add').hide();
         }
 
         function attemptLogin() {
+          $('#spinner').show();
+          $('#login').hide();
           var email = $('#email').val();
           var password = $('#password').val();
           auth.login('password', { email: email, password: password });

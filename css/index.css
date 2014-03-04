@@ -10,6 +10,14 @@ body {
   margin: 0 auto;
 }
 
+#spinner {
+  width: 330px;
+  height: 293px;
+  display: none;
+  margin: 0 auto;
+  background: url(../images/spinner.gif) no-repeat center;
+}
+
 .form-signin .form-signin-subheading {
   font-weight: normal;
   margin-bottom: 10px;
