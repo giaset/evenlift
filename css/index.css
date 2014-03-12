@@ -9,12 +9,18 @@ body {
   padding: 15px;
   margin: 0 auto;
 }
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-  margin-bottom: 10px;
+
+#spinner {
+  width: 330px;
+  height: 293px;
+  display: none;
+  margin: 0 auto;
+  background: url(../images/spinner.gif) no-repeat center;
 }
-.form-signin .checkbox {
+
+.form-signin .form-signin-subheading {
   font-weight: normal;
+  margin-bottom: 10px;
 }
 .form-signin .form-control {
   position: relative;
@@ -27,6 +33,13 @@ body {
 }
 .form-signin .form-control:focus {
   z-index: 2;
+}
+.form-signin input {
+  margin-bottom: 10px;
+}
+.form-signin h4 {
+  margin-top: 5px;
+  text-align: center;
 }
 .form-signin input[type="email"] {
   margin-bottom: -1px;

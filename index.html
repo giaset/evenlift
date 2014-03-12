@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EvenLift</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <!-- Custom styles -->
+    <link href="css/index.css" rel="stylesheet">
+
+    <!-- Install Firebase & Simple Login -->
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+    <script type='text/javascript' src='https://cdn.firebase.com/js/simple-login/1.3.0/firebase-simple-login.js'></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+
+      <div id="spinner"></div>
+
+      <div class="form-signin" id="login">
+        <h2 class="form-signin-heading">Log in to start your workout</h2>
+        <h5 class="form-signin-subheading">Not a member yet? <a href="register.html">Register here</a></h5>
+        <input type="email" id="email" class="form-control" placeholder="Email address" required autofocus>
+        <input type="password" id="password" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" onclick="attemptLogin()">Log in</button>
+      </div> <!-- /login -->
+
+      <div class="form-signin" id="add">
+        <h2 class="form-signin-heading">Add completed set to current workout</h2>
+        <input type="text" id="exercise" class="form-control" placeholder="Exercise" required autofocus>
+        <input type="number" id="reps" min="1" class="form-control" placeholder="Reps" required>
+        <input type="number" id="weight" min="1" class="form-control" placeholder="Weight (in kg, leave blank for bw)">
+        <input type="number" id="rest" class="form-control" placeholder="Rest after (in sec, optional)">
+        <input type="text" id="notes" class="form-control" placeholder="Notes (optional)">
+        <button class="btn btn-lg btn-success btn-block" onclick="submitSet()">Add set</button>
+        <h4 class="form-signin-heading">- or -</h4>
+        <button class="btn btn-lg btn-danger btn-block" onclick="endWorkout()">End workout</button>
+      </div> <!-- /add -->
+
+    </div> <!-- /container -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+        var userFirebase = null;
+        var fb = new Firebase('https://evenlift.firebaseio.com/');
+        var auth = new FirebaseSimpleLogin(fb, function(error, user) {
+          if (user) {
+            userFirebase = new Firebase('https://evenlift.firebaseio.com/'+user.id);
+            // user logged in
+            startWorkout();
+          } else {
+            // user is logged out
+            showLogin();
+            if (error) {
+              // an error occurred while attempting login
+              alert(error);
+            }
+          }
+        });
+
+        // Logout the user whenever we get to this page
+        auth.logout();
+
+        function startWorkout() {
+          $('#spinner').hide();
+          $('#login').hide();
+          $('#add').show();
+
+          userFirebase.push({ type: 'workout.start', time: $.now() });
+        }
+
+        function showLogin() {
+          $('#spinner').hide();
+          $('#password').val('');
+          $('#login').show();
+          $('#add').hide();
+        }
+
+        function attemptLogin() {
+          $('#spinner').show();
+          $('#login').hide();
+          var email = $('#email').val();
+          var password = $('#password').val();
+          auth.login('password', { email: email, password: password });
+        };
+
+        $('#password').keypress(function (e) {
+          if (e.keyCode == 13) {
+            attemptLogin();
+          }
+        });
+
+        function submitSet() {
+          var set = { exercise: $('#exercise').val(), reps: $('#reps').val(), weight: $('#weight').val(), rest: $('#rest').val(), notes: $('#notes').val() };
+          userFirebase.push({ type: 'workout.set', time: $.now(), set: set});
+        }
+
+        function endWorkout() {
+          auth.logout();
+
+          userFirebase.push({ type: 'workout.end', time: $.now() });
+        }
+
+      </script>
+  </body>
+</html>
