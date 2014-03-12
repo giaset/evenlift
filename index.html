@@ -7,7 +7,7 @@
     <title>EvenLift</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
     <!-- Custom styles -->
     <link href="css/index.css" rel="stylesheet">
@@ -38,12 +38,12 @@
 
       <div class="form-signin" id="add">
         <h2 class="form-signin-heading">Add completed set to current workout</h2>
-        <input type="text" class="form-control" placeholder="Exercise" required autofocus>
-        <input type="number" min="1" class="form-control" placeholder="Reps" required>
-        <input type="number" min="1" class="form-control" placeholder="Weight (in kg, leave blank for bw)">
-        <input type="number" class="form-control" placeholder="Rest after (in sec, optional)">
-        <input type="text" class="form-control" placeholder="Notes (optional)">
-        <button class="btn btn-lg btn-success btn-block" >Add set</button>
+        <input type="text" id="exercise" class="form-control" placeholder="Exercise" required autofocus>
+        <input type="number" id="reps" min="1" class="form-control" placeholder="Reps" required>
+        <input type="number" id="weight" min="1" class="form-control" placeholder="Weight (in kg, leave blank for bw)">
+        <input type="number" id="rest" class="form-control" placeholder="Rest after (in sec, optional)">
+        <input type="text" id="notes" class="form-control" placeholder="Notes (optional)">
+        <button class="btn btn-lg btn-success btn-block" onclick="submitSet()">Add set</button>
         <h4 class="form-signin-heading">- or -</h4>
         <button class="btn btn-lg btn-danger btn-block" onclick="endWorkout()">End workout</button>
       </div> <!-- /add -->
@@ -53,13 +53,15 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script>
+        var userFirebase = null;
         var fb = new Firebase('https://evenlift.firebaseio.com/');
         var auth = new FirebaseSimpleLogin(fb, function(error, user) {
           if (user) {
+            userFirebase = new Firebase('https://evenlift.firebaseio.com/'+user.id);
             // user logged in
-            startWorkout(user);
+            startWorkout();
           } else {
             // user is logged out
             showLogin();
@@ -73,10 +75,12 @@
         // Logout the user whenever we get to this page
         auth.logout();
 
-        function startWorkout(user) {
+        function startWorkout() {
           $('#spinner').hide();
           $('#login').hide();
           $('#add').show();
+
+          userFirebase.push({ type: 'workout.start', time: $.now() });
         }
 
         function showLogin() {
@@ -100,11 +104,17 @@
           }
         });
 
-        function endWorkout() {
-          auth.logout();
+        function submitSet() {
+          var set = { exercise: $('#exercise').val(), reps: $('#reps').val(), weight: $('#weight').val(), rest: $('#rest').val(), notes: $('#notes').val() };
+          userFirebase.push({ type: 'workout.set', time: $.now(), set: set});
         }
 
-        //fb.push({exercise: exercise, time: time, reps: reps, weight: weight, rest: rest});
+        function endWorkout() {
+          auth.logout();
+
+          userFirebase.push({ type: 'workout.end', time: $.now() });
+        }
+
       </script>
   </body>
 </html>
