@@ -59,7 +59,7 @@
         var fb = new Firebase('https://evenlift.firebaseio.com/');
         var auth = new FirebaseSimpleLogin(fb, function(error, user) {
           if (user) {
-            userFirebase = new Firebase('https://evenlift.firebaseio.com/'+user.id);
+            userFirebase = new Firebase('https://evenlift.firebaseio.com/users/'+user.id+'/workouts/');
             // user logged in
             startWorkout();
           } else {
