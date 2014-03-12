@@ -55,11 +55,14 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script>
-        var userFirebase = null;
-        var fb = new Firebase('https://evenlift.firebaseio.com/');
-        var auth = new FirebaseSimpleLogin(fb, function(error, user) {
+        var evenliftRef = new Firebase('https://evenlift.firebaseio.com');
+        var currentUserRef = null;
+        var currentWorkoutRef = null;
+        var setsRef = null;
+
+        var auth = new FirebaseSimpleLogin(evenliftRef, function(error, user) {
           if (user) {
-            userFirebase = new Firebase('https://evenlift.firebaseio.com/users/'+user.id+'/workouts/');
+            currentUserRef = evenliftRef.child('users/'+user.uid);
             // user logged in
             startWorkout();
           } else {
@@ -80,7 +83,15 @@
           $('#login').hide();
           $('#add').show();
 
-          userFirebase.push({ type: 'workout.start', time: $.now() });
+          var userWorkoutsRef = currentUserRef.child('workouts');
+
+          // Create new workout object
+          currentWorkoutRef = userWorkoutsRef.push();
+
+          // Set currentWorkoutRef's start_time to $.now()
+          currentWorkoutRef.child('start_time').set($.now());
+
+          setsRef = currentWorkoutRef.child('sets');
         }
 
         function showLogin() {
@@ -105,14 +116,16 @@
         });
 
         function submitSet() {
-          var set = { exercise: $('#exercise').val(), reps: $('#reps').val(), weight: $('#weight').val(), rest: $('#rest').val(), notes: $('#notes').val() };
-          userFirebase.push({ type: 'workout.set', time: $.now(), set: set});
+          var set = { exercise: $('#exercise').val(), reps: $('#reps').val(), weight: $('#weight').val(), rest: $('#rest').val(), notes: $('#notes').val(), time: $.now() };
+
+          setsRef.push(set);
         }
 
         function endWorkout() {
           auth.logout();
 
-          userFirebase.push({ type: 'workout.end', time: $.now() });
+          // Set currentWorkoutRef's end_time to $.now()
+          currentWorkoutRef.child('end_time').set($.now());
         }
 
       </script>
